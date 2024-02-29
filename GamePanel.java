@@ -190,10 +190,6 @@ public class GamePanel extends JPanel {
         lasers.removeAll(lasersToRemove);
     }
 
-    public void addAsteroid(Asteroid asteroid) {
-        asteroids.add(asteroid);
-    }
-
     private class ShootingMouseListener extends MouseAdapter {
         @Override
         public void mouseClicked(MouseEvent e) {
