@@ -23,9 +23,13 @@ public class Laser implements MoveableObject {
     public Rectangle getBounds() {
         return new Rectangle(x, y, LASER_WIDTH, LASER_HEIGHT);
     }
+    public int getY() {
+        return y; // Return the y-coordinate of the laser
+    }
+
 
     public void draw(Graphics g) {
-        g.setColor(Color.YELLOW);
+        g.setColor(Color.GREEN);
         g.fillRect(x, y, LASER_WIDTH, LASER_HEIGHT);
     }
     public static int getLaserHeight() {

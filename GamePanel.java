@@ -5,6 +5,10 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import java.awt.Image;
+import javax.swing.ImageIcon;
+import java.awt.Toolkit;
+
 
 public class GamePanel extends JPanel {
     private Rocket rocket;
@@ -13,23 +17,24 @@ public class GamePanel extends JPanel {
 
     // Constants for the rocket movement distance
     private static final int ROCKET_MOVE_DISTANCE = 20;
-    private static final int ASTEROID_SPAWN_FREQUENCY = 20000; // Milliseconds between asteroid spawns
+    private static final int ASTEROID_SPAWN_FREQUENCY = 5000; // Milliseconds between asteroid spawns
 
     private int asteroidSpawnTimer = ASTEROID_SPAWN_FREQUENCY;
     private Timer gameTimer;
+    private Image backgroundImage;
 
     public GamePanel() {
         rocket = new Rocket(375, 550); // Starting position of the rocket
         asteroids = new ArrayList<>();
         lasers = new ArrayList<>();
 
+        backgroundImage = Toolkit.getDefaultToolkit().createImage("C:\\Users\\Nickc\\OneDrive\\Desktop\\RocketNew\\Space.jpg");
 
         setupKeyBindings();
         addMouseListener(new ShootingMouseListener());
 
 
         // Start the game loop
-        startGameLoop();
         startAsteroidSpawningTimer();
         gameTimer = new Timer(50, e -> updateGame());
         gameTimer.start();
@@ -96,11 +101,11 @@ public class GamePanel extends JPanel {
         timer.start();
     }
 
-    private static final int LASER_SPEED = 10; // Define this constant at the class level
+    private static final int LASER_SPEED = 50; // Define this constant at the class level
 
     private void updateGame() {
         // Update the asteroidSpawnTimer
-        asteroidSpawnTimer -= 100;
+        asteroidSpawnTimer -= 100; // Assuming this method is called every 100ms, adjust as needed
 
         // Check if it's time to spawn a new asteroid
         if (asteroidSpawnTimer <= 0) {
@@ -109,12 +114,36 @@ public class GamePanel extends JPanel {
         }
 
         // Update positions of existing asteroids and lasers
-        asteroids.forEach(asteroid -> asteroid.move(0, 1)); // Move asteroids downwards
-        lasers.forEach(laser -> laser.move(0, -1)); // Move lasers upwards
+        ArrayList<Asteroid> asteroidsToRemove = new ArrayList<>();
+        ArrayList<Laser> lasersToRemove = new ArrayList<>();
+
+        // Move asteroids downwards
+        for (Asteroid asteroid : asteroids) {
+            asteroid.move(0, 1); // Adjust movement speed as needed
+            if (asteroid.getY() > getHeight()) { // Remove asteroid if it moves beyond the bottom
+                asteroidsToRemove.add(asteroid);
+            }
+        }
+
+        // Move lasers upwards
+        for (Laser laser : lasers) {
+            laser.move(0, -LASER_SPEED); // Use the LASER_SPEED constant
+            if (laser.getY() + Laser.getLaserHeight() < 0) { // Remove laser if it moves beyond the top
+                lasersToRemove.add(laser);
+            }
+        }
 
         // Check for collisions
         checkCollisions();
+
+        // Remove any asteroids and lasers that have been marked for removal
+        asteroids.removeAll(asteroidsToRemove);
+        lasers.removeAll(lasersToRemove);
+
+        // Repaint the panel to reflect the updated game state
+        repaint();
     }
+
     private void startAsteroidSpawningTimer() {
         Timer timer = new Timer(ASTEROID_SPAWN_FREQUENCY, new AbstractAction() {
             @Override
@@ -132,6 +161,8 @@ public class GamePanel extends JPanel {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
+        // Draw the background image
+        g.drawImage(backgroundImage, 0, 0, this.getWidth(), this.getHeight(), this);
         rocket.draw(g);
         for (Asteroid asteroid : asteroids) {
             asteroid.draw(g);

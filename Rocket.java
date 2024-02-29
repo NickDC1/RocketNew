@@ -2,6 +2,7 @@ import java.awt.Graphics;
 import java.awt.Color;
 import java.awt.Rectangle;
 
+
 public class Rocket implements MoveableObject {
     private int x, y;
     private final int width = 30;

@@ -1,7 +1,7 @@
 public enum AsteroidSize {
-    SMALL(1, 2), // Example parameters: sizeFactor, speed
-    MEDIUM(2, 1.5),
-    LARGE(3, 1);
+    SMALL(3, 2), // Example parameters: sizeFactor, speed
+    MEDIUM(4, 1.5),
+    LARGE(5, 1);
 
     private final int sizeFactor;
     private final double speed;
