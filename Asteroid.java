@@ -16,10 +16,8 @@ public class Asteroid implements MoveableObject {
 
     @Override
     public void move(int dx, int dy) {
-        // Since asteroids typically move down the screen,
-        // dx will often be 0 and dy will be the speed at which the asteroid moves down.
         x += dx;
-        y += dy; // This could use the speed variable directly or use the dy parameter.
+        y += dy;
     }
 
     public void draw(Graphics g) {

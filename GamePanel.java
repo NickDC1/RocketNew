@@ -23,6 +23,7 @@ public class GamePanel extends JPanel {
     private Timer gameTimer;
     private Image backgroundImage;
 
+    // Initializes game components and loads resources.
     public GamePanel() {
         rocket = new Rocket(375, 550); // Starting position of the rocket
         asteroids = new ArrayList<>();
@@ -40,6 +41,7 @@ public class GamePanel extends JPanel {
         gameTimer.start();
     }
 
+    //Keybinds to move rocket
     private void setupKeyBindings() {
         // Shoot Laser
         getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("SPACE"), "shootLaser");
@@ -91,18 +93,16 @@ public class GamePanel extends JPanel {
         });
     }
 
+    // Creates and adds a new laser to the game based on the rocket's position.
     private void shootLaser() {
         lasers.add(new Laser(rocket.getX() + 15, rocket.getY())); // Center the laser on the rocket
         repaint();
     }
 
-    private void startGameLoop() {
-        Timer timer = new Timer(100, e -> updateGame());
-        timer.start();
-    }
 
     private static final int LASER_SPEED = 50; // Define this constant at the class level
 
+    // Updates game state including moving objects and checking for collisions.
     private void updateGame() {
         // Update the asteroidSpawnTimer
         asteroidSpawnTimer -= 100; // Assuming this method is called every 100ms, adjust as needed
@@ -144,6 +144,7 @@ public class GamePanel extends JPanel {
         repaint();
     }
 
+    // Initializes a timer to spawn asteroids at regular intervals.
     private void startAsteroidSpawningTimer() {
         Timer timer = new Timer(ASTEROID_SPAWN_FREQUENCY, new AbstractAction() {
             @Override
@@ -153,11 +154,15 @@ public class GamePanel extends JPanel {
         });
         timer.start();
     }
+
+    // Adds a new asteroid at a random position at the top of the screen.
     private void spawnAsteroid() {
         int x = (int) (Math.random() * getWidth());
         AsteroidSize size = AsteroidSize.values()[(int) (Math.random() * AsteroidSize.values().length)];
         asteroids.add(new Asteroid(x, -50, size));
     }
+
+    //draw the game state, including the background, rocket, asteroids, and lasers.
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -172,6 +177,7 @@ public class GamePanel extends JPanel {
         }
     }
 
+    // Checks for collisions between lasers and asteroids and handles them.
     private void checkCollisions() {
         ArrayList<Asteroid> asteroidsToRemove = new ArrayList<>();
         ArrayList<Laser> lasersToRemove = new ArrayList<>();
@@ -190,6 +196,7 @@ public class GamePanel extends JPanel {
         lasers.removeAll(lasersToRemove);
     }
 
+    // Mouse listener to handle shooting lasers on mouse click.
     private class ShootingMouseListener extends MouseAdapter {
         @Override
         public void mouseClicked(MouseEvent e) {

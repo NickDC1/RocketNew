@@ -14,7 +14,6 @@ public class Laser implements MoveableObject {
 
     @Override
     public void move(int dx, int dy) {
-        // Lasers typically move straight up, so dy is expected to be negative
         x += dx;
         y += dy;
     }
